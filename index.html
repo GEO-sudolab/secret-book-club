@@ -129,7 +129,7 @@
       font-weight: 700;
     }
 
-    .menu-btn {
+    .admin-btn {
       background: white;
       border: 2px solid var(--pink-medium);
       color: var(--pink-dark);
@@ -146,7 +146,7 @@
       transition: all 0.2s ease;
     }
 
-    .menu-btn:hover {
+    .admin-btn:hover {
       background: var(--pink-soft);
       transform: translateY(-2px);
     }
@@ -403,16 +403,6 @@
       line-height: 1.4;
     }
 
-    /* ALL DONE BANNER */
-    .all-done-banner {
-      background: white;
-      border: 2px dashed var(--pink-deep);
-      border-radius: var(--radius-xl);
-      padding: 24px 16px;
-      margin-top: 15px;
-      box-shadow: 0 10px 30px rgba(251, 111, 146, 0.15);
-    }
-
     /* MODALS */
     .modal-overlay {
       position: fixed;
@@ -476,16 +466,55 @@
       box-shadow: 0 0 0 3px rgba(251, 111, 146, 0.2);
     }
 
-    .reveal-card {
-      background: #fffafb;
-      border: 1.5px solid var(--pink-medium);
+    /* ADMIN DASHBOARD STYLES */
+    .admin-stats-box {
+      background: #fff0f3;
+      border: 2px dashed var(--pink-accent);
       border-radius: var(--radius-md);
-      padding: 13px 16px;
-      margin-bottom: 10px;
+      padding: 14px 18px;
+      margin-bottom: 18px;
+      font-size: 14px;
+      color: var(--text-main);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .admin-chips-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 14px 0 20px;
+      max-height: 200px;
+      overflow-y: auto;
+      padding: 4px;
+    }
+
+    .admin-chip {
+      background: white;
+      border: 2px solid var(--pink-soft);
+      padding: 6px 14px;
+      border-radius: 20px;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 14px;
+      font-weight: 700;
+      box-shadow: 0 3px 8px rgba(251, 111, 146, 0.08);
+    }
+
+    .chip-del-btn {
+      background: none;
+      border: none;
+      color: #e07a93;
+      cursor: pointer;
+      font-size: 15px;
       display: flex;
       align-items: center;
-      justify-content: space-between;
-      font-size: 14px;
+    }
+    .chip-del-btn:hover {
+      color: var(--pink-dark);
+      transform: scale(1.2);
     }
 
     /* Toast */
@@ -542,33 +571,21 @@
       </div>
       <div style="display: flex; align-items: center; gap: 8px;">
         <span class="cloud-sync-status" id="cloudStatus">● Онлайн</span>
-        <button class="menu-btn" onclick="openModal('menuModal')">
-          <span>⚙️</span> Меню
+        <button class="admin-btn" onclick="openAdminPinModal()">
+          <span>👑</span> Адмін
         </button>
       </div>
     </header>
 
     <!-- SCREEN 1: GIRLS SELECTION (Головне меню) -->
     <section id="screenSelect" class="screen active">
-      <h1>Хто обирає? 🌸</h1>
+      <h1>Хто зараз обирає? 🌸</h1>
       <p class="subtitle">
-        Знайди своє ім'я у списку нижче та натисни на нього, щоб отримати таємні номери!
+        Знайди своє ім'я у списку нижче та натисни на нього, щоб дізнатися свій номер!
       </p>
 
       <div class="girls-grid" id="girlsGrid">
         <!-- Rendered by JS -->
-      </div>
-
-      <div id="allDoneSection" class="all-done-banner" style="display: none;">
-        <h2 style="font-family: 'Playfair Display', serif; color: var(--pink-dark); margin-bottom: 8px;">
-          🎉 Усі дівчата обрали свої книги!
-        </h2>
-        <p style="font-size: 14px; color: var(--text-muted); margin-bottom: 20px;">
-          Книги наклеєні та розібрані. Можна розпаковувати подарунки! 🥂📚
-        </p>
-        <button class="btn-pink" onclick="openGrandRevealPinModal()">
-          🤫 Привідкрити завісу (PIN 1122)
-        </button>
       </div>
     </section>
 
@@ -645,7 +662,7 @@
       </div>
 
       <p style="font-size: 12.5px; color: var(--text-muted); margin-bottom: 20px;">
-        🔒 Ти не знаєш, чия книга під твоїм виграшним номером — це відкриється наприкінці вечора!
+        🔒 Ти не знаєш, чия книга під твоїм виграшним номером — це залишиться загадкою!
       </p>
 
       <button class="btn-pink" onclick="finishSecretViewAndLock()">
@@ -654,70 +671,64 @@
     </section>
   </main>
 
-  <!-- MODAL: PIN CODE (1122) -->
-  <div class="modal-overlay" id="pinModal">
+  <!-- MODAL: PIN CODE (1122) FOR ADMIN -->
+  <div class="modal-overlay" id="adminPinModal">
     <div class="modal-card" style="max-width: 380px; text-align: center;">
       <div class="modal-header">
-        <h3 class="modal-title">Вхід організаторки 🔐</h3>
-        <button class="close-modal-btn" onclick="closeModal('pinModal')">✕</button>
+        <h3 class="modal-title">Вхід адміністратора 🔐</h3>
+        <button class="close-modal-btn" onclick="closeModal('adminPinModal')">✕</button>
       </div>
 
       <p style="font-size: 13.5px; color: var(--text-muted); margin-bottom: 18px;">
-        Введіть PIN-код <strong>1122</strong>, щоб привідкрити завісу:
+        Введіть PIN-код <strong>1122</strong>, щоб увійти в меню керування:
       </p>
 
-      <form onsubmit="verifyPinAndShow(event)">
-        <input type="password" id="pinInput" class="input-pink" placeholder="PIN" maxlength="6" style="text-align: center; font-size: 24px; letter-spacing: 6px; margin-bottom: 18px; width: 100%;" autocomplete="off">
+      <form onsubmit="verifyAdminPin(event)">
+        <input type="password" id="adminPinInput" class="input-pink" placeholder="PIN" maxlength="6" style="text-align: center; font-size: 24px; letter-spacing: 6px; margin-bottom: 18px; width: 100%;" autocomplete="off">
         <div style="display: flex; gap: 10px; justify-content: center;">
-          <button type="button" class="btn-secondary" onclick="closeModal('pinModal')">Скасувати</button>
-          <button type="submit" class="btn-pink">Відкрити ✨</button>
+          <button type="button" class="btn-secondary" onclick="closeModal('adminPinModal')">Скасувати</button>
+          <button type="submit" class="btn-pink">Увійти ✨</button>
         </div>
       </form>
     </div>
   </div>
 
-  <!-- MODAL: GRAND REVEAL (Привідкриття завіси) -->
-  <div class="modal-overlay" id="revealModal">
+  <!-- MODAL: ADMIN DASHBOARD (Керування дівчатами та кількістю) -->
+  <div class="modal-overlay" id="adminDashboardModal">
     <div class="modal-card">
       <div class="modal-header">
-        <h3 class="modal-title">Таємна завіса відкрита! 🥂📖</h3>
-        <button class="close-modal-btn" onclick="closeModal('revealModal')">✕</button>
+        <h3 class="modal-title">Меню адміністратора 👑</h3>
+        <button class="close-modal-btn" onclick="closeModal('adminDashboardModal')">✕</button>
       </div>
 
-      <p style="font-size: 13.5px; color: var(--text-muted); margin-bottom: 18px;">
-        Ось розкладка: хто під якою цифрою приніс книгу, і кому вона дісталася!
+      <div class="admin-stats-box">
+        <div>
+          <strong>Учасниць на заході:</strong> <span id="adminGirlsCount" style="color: var(--pink-dark); font-size: 18px; font-weight: 800;">6</span>
+        </div>
+        <div style="font-size: 12.5px; color: var(--text-muted);">
+          Номери книг: <strong id="adminNumbersRange">від 1 до 6</strong>
+        </div>
+      </div>
+
+      <p style="font-size: 13.5px; color: var(--text-muted); margin-bottom: 10px;">
+        Додавайте або змінюйте імена учасниць:
       </p>
 
-      <div id="revealListContainer">
+      <form onsubmit="adminAddGirl(event)" style="display: flex; gap: 8px; margin-bottom: 16px;">
+        <input type="text" id="adminNewNameInput" class="input-pink" placeholder="Ім'я нової дівчини" style="flex: 1;" autocomplete="off">
+        <button type="submit" class="btn-pink" style="padding: 12px 20px;">+ Додати</button>
+      </form>
+
+      <div class="admin-chips-list" id="adminChipsList">
         <!-- Rendered by JS -->
       </div>
 
-      <div style="margin-top: 20px;">
-        <button class="btn-pink" style="width: 100%;" onclick="closeModal('revealModal')">
-          Закрити завісу
+      <div style="border-top: 2px dashed #ffd6e0; padding-top: 16px; margin-top: 10px; display: flex; gap: 10px;">
+        <button class="btn-secondary" style="flex: 1;" onclick="closeModal('adminDashboardModal')">
+          Закрити
         </button>
-      </div>
-    </div>
-  </div>
-
-  <!-- MODAL: MENU -->
-  <div class="modal-overlay" id="menuModal">
-    <div class="modal-card">
-      <div class="modal-header">
-        <h3 class="modal-title">Меню зустрічі ⚙️</h3>
-        <button class="close-modal-btn" onclick="closeModal('menuModal')">✕</button>
-      </div>
-
-      <p style="font-size: 13.5px; color: var(--text-muted); margin-bottom: 18px;">
-        Керування книгообміном клубу.
-      </p>
-
-      <div style="display: flex; flex-direction: column; gap: 12px;">
-        <button class="btn-secondary" style="text-align: left;" onclick="closeModal('menuModal'); openGrandRevealPinModal();">
-          🤫 Привідкрити завісу (потрібен PIN 1122)
-        </button>
-        <button class="btn-secondary" style="text-align: left; color: #c9184a; border-color: #ffb3c6;" onclick="resetExchangePrompt()">
-          🔄 Скинути всі номери та перетасувати
+        <button class="btn-pink" style="flex: 2;" onclick="adminSaveAndSync()">
+          💾 Зберегти зміни
         </button>
       </div>
     </div>
@@ -727,10 +738,10 @@
   <div class="toast" id="toastMessage">Повідомлення</div>
 
   <script>
-    /* Cloud Database Config (api.restful-api.dev object) */
+    /* Cloud Database Config */
     const CLOUD_DB_URL = "https://api.restful-api.dev/objects/ff808181a09d98f701a1faa851600b55";
 
-    /* Default participants */
+    /* Default initial participants */
     const DEFAULT_DATA = {
       isStarted: true,
       participants: [
@@ -744,6 +755,7 @@
     };
 
     let state = { ...DEFAULT_DATA };
+    let tempAdminNames = [];
     let activeParticipant = null;
 
     /* Web Audio Sounds */
@@ -792,7 +804,7 @@
           }
         }
       } catch (e) {
-        console.warn("Cloud sync fallback to local cache", e);
+        console.warn("Cloud sync fallback to cache", e);
         document.getElementById('cloudStatus').innerText = "○ Локально";
       }
     }
@@ -813,23 +825,63 @@
       }
     }
 
+    /* Derangement Algorithm: Rejection Sampling for Guaranteed Unbiased Permutation */
+    function shuffle(arr) {
+      for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+      }
+    }
+
+    function generateExchangeParticipants(names) {
+      const n = names.length;
+      if (n < 2) return null;
+
+      // Assign unique random book number 1..N to each girl
+      const bookNumbers = Array.from({ length: n }, (_, i) => i + 1);
+      shuffle(bookNumbers);
+
+      // Generate deranged indices where target[i] !== i
+      const derangedIndices = Array.from({ length: n }, (_, i) => i);
+      let isValid = false;
+      let iterations = 0;
+
+      while (!isValid && iterations < 1000) {
+        iterations++;
+        shuffle(derangedIndices);
+
+        isValid = true;
+        for (let i = 0; i < n; i++) {
+          if (derangedIndices[i] === i) {
+            isValid = false;
+            break;
+          }
+        }
+      }
+
+      return names.map((name, i) => ({
+        id: 'p_' + (i + 1) + '_' + Date.now(),
+        name: name,
+        myBookNumber: bookNumbers[i],
+        targetBookNumber: bookNumbers[derangedIndices[i]],
+        hasViewed: false
+      }));
+    }
+
     /* Screen Navigation */
     function showScreen(screenId) {
       document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
       document.getElementById(screenId).classList.add('active');
     }
 
-    /* Render Grid */
+    /* Render Main Girls Grid */
     function renderGirlsGrid() {
       const grid = document.getElementById('girlsGrid');
       grid.innerHTML = '';
 
       const emojis = ['🌸', '✨', '🎀', '🌷', '🧁', '🍓', '☕', '📖', '💫', '🧸'];
-      let allDone = true;
 
       state.participants.forEach((p, idx) => {
-        if (!p.hasViewed) allDone = false;
-
         const card = document.createElement('div');
         card.className = `girl-card-btn ${p.hasViewed ? 'done' : ''}`;
         card.innerHTML = `
@@ -846,8 +898,6 @@
 
         grid.appendChild(card);
       });
-
-      document.getElementById('allDoneSection').style.display = allDone ? 'block' : 'none';
     }
 
     /* STEP 1: Select Girl -> Confirmation */
@@ -907,60 +957,105 @@
       showToast("Твій номер надійно приховано! 💖");
     }
 
-    /* PIN Code Verification (1122) for Grand Reveal */
-    function openGrandRevealPinModal() {
+    /* ADMIN MENU & PIN (1122) */
+    function openAdminPinModal() {
       playClick();
-      document.getElementById('pinInput').value = '';
-      openModal('pinModal');
-      setTimeout(() => document.getElementById('pinInput').focus(), 150);
+      document.getElementById('adminPinInput').value = '';
+      openModal('adminPinModal');
+      setTimeout(() => document.getElementById('adminPinInput').focus(), 150);
     }
 
-    function verifyPinAndShow(e) {
+    function verifyAdminPin(e) {
       e.preventDefault();
-      const enteredPin = document.getElementById('pinInput').value.trim();
+      const enteredPin = document.getElementById('adminPinInput').value.trim();
 
       if (enteredPin === '1122') {
-        closeModal('pinModal');
-        showGrandRevealModal();
+        closeModal('adminPinModal');
+        openAdminDashboard();
       } else {
-        showToast("Невірний пароль! Спробуйте ще раз ❌");
-        document.getElementById('pinInput').value = '';
-        document.getElementById('pinInput').focus();
+        showToast("Невірний PIN-код! ❌");
+        document.getElementById('adminPinInput').value = '';
+        document.getElementById('adminPinInput').focus();
       }
     }
 
-    function showGrandRevealModal() {
+    function openAdminDashboard() {
       playClick();
-      const container = document.getElementById('revealListContainer');
-      container.innerHTML = '';
-
-      const bookOwnerMap = {};
-      state.participants.forEach(p => {
-        bookOwnerMap[p.myBookNumber] = p.name;
-      });
-
-      state.participants.forEach(p => {
-        const bookOwner = bookOwnerMap[p.targetBookNumber] || 'Невідомо';
-        const card = document.createElement('div');
-        card.className = 'reveal-card';
-        card.innerHTML = `
-          <div>
-            <strong>${p.name}</strong> 
-            <span style="color: var(--text-muted); font-size: 13px;">(принесла №${p.myBookNumber})</span>
-          </div>
-          <div>
-            ➡️ взяла <strong>Книгу №${p.targetBookNumber}</strong> 
-            <span style="color: var(--pink-dark); font-weight: 700;">(від ${bookOwner})</span>
-          </div>
-        `;
-        container.appendChild(card);
-      });
-
-      openModal('revealModal');
-      launchConfetti();
+      tempAdminNames = state.participants.map(p => p.name);
+      renderAdminDashboard();
+      openModal('adminDashboardModal');
     }
 
-    /* Modals & Reset */
+    function renderAdminDashboard() {
+      document.getElementById('adminGirlsCount').innerText = tempAdminNames.length;
+      document.getElementById('adminNumbersRange').innerText = tempAdminNames.length > 0 
+        ? `від 1 до ${tempAdminNames.length}` 
+        : 'немає';
+
+      const container = document.getElementById('adminChipsList');
+      container.innerHTML = '';
+
+      tempAdminNames.forEach((name, idx) => {
+        const chip = document.createElement('div');
+        chip.className = 'admin-chip';
+        chip.innerHTML = `
+          <span>🎀 ${name}</span>
+          <button type="button" class="chip-del-btn" onclick="adminRemoveGirl(${idx})" title="Видалити">✕</button>
+        `;
+        container.appendChild(chip);
+      });
+    }
+
+    function adminAddGirl(e) {
+      e.preventDefault();
+      const input = document.getElementById('adminNewNameInput');
+      const name = input.value.trim();
+      if (!name) return;
+
+      if (tempAdminNames.includes(name)) {
+        showToast("Таке ім'я вже є у списку!");
+        return;
+      }
+
+      tempAdminNames.push(name);
+      input.value = '';
+      playClick();
+      renderAdminDashboard();
+    }
+
+    function adminRemoveGirl(idx) {
+      if (tempAdminNames.length <= 2) {
+        showToast("Потрібно щонайменше 2 учасниці!");
+        return;
+      }
+      tempAdminNames.splice(idx, 1);
+      playClick();
+      renderAdminDashboard();
+    }
+
+    async function adminSaveAndSync() {
+      if (tempAdminNames.length < 2) {
+        showToast("Потрібно мінімум 2 учасниці!");
+        return;
+      }
+
+      const generated = generateExchangeParticipants(tempAdminNames);
+      if (!generated) {
+        showToast("Помилка генерації деранжування!");
+        return;
+      }
+
+      state.participants = generated;
+      state.isStarted = true;
+
+      await pushToCloud();
+      closeModal('adminDashboardModal');
+      renderGirlsGrid();
+      playChime();
+      showToast(`Збережено! Учасниць: ${state.participants.length} (номери 1..${state.participants.length}) 🌸`);
+    }
+
+    /* Modal Helpers */
     function openModal(id) {
       playClick();
       document.getElementById(id).style.display = 'flex';
@@ -968,20 +1063,6 @@
 
     function closeModal(id) {
       document.getElementById(id).style.display = 'none';
-    }
-
-    async function resetExchangePrompt() {
-      const pin = prompt("Введіть PIN 1122 для скидання книгообміну:");
-      if (pin === '1122') {
-        state.participants.forEach(p => p.hasViewed = false);
-        await pushToCloud();
-        closeModal('menuModal');
-        renderGirlsGrid();
-        showScreen('screenSelect');
-        showToast("Скинуто! Можна проходити знову.");
-      } else if (pin !== null) {
-        showToast("Невірний PIN! Скидання скасовано.");
-      }
     }
 
     function showToast(msg) {
