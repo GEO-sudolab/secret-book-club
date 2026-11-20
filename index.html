@@ -28,7 +28,6 @@
       box-sizing: border-box;
       margin: 0;
       padding: 0;
-      user-select: none;
       -webkit-font-smoothing: antialiased;
     }
 
@@ -43,6 +42,15 @@
       overflow-x: hidden;
       position: relative;
       padding: 16px;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+
+    /* Input focus allowed on mobile devices */
+    input, textarea, select, [contenteditable="true"] {
+      user-select: text !important;
+      -webkit-user-select: text !important;
+      -webkit-touch-callout: default !important;
     }
 
     /* Ambient decor */
@@ -443,8 +451,8 @@
     }
 
     .input-pink {
-      padding: 14px 18px;
-      border-radius: 30px;
+      padding: 12px 18px;
+      border-radius: 20px;
       border: 2px solid var(--pink-medium);
       font-family: inherit;
       font-size: 15px;
@@ -476,7 +484,7 @@
       flex-wrap: wrap;
       gap: 8px;
       margin: 14px 0 20px;
-      max-height: 200px;
+      max-height: 220px;
       overflow-y: auto;
       padding: 4px;
     }
@@ -484,8 +492,8 @@
     .admin-chip {
       background: white;
       border: 2px solid var(--pink-soft);
-      padding: 6px 14px;
-      border-radius: 20px;
+      padding: 4px 6px 4px 14px;
+      border-radius: 24px;
       display: inline-flex;
       align-items: center;
       gap: 8px;
@@ -494,18 +502,45 @@
       box-shadow: 0 3px 8px rgba(251, 111, 146, 0.08);
     }
 
+    /* Big accessible delete button */
     .chip-del-btn {
-      background: none;
+      background: var(--pink-soft);
       border: none;
-      color: #e07a93;
-      cursor: pointer;
-      font-size: 15px;
-      display: flex;
-      align-items: center;
-    }
-    .chip-del-btn:hover {
       color: var(--pink-dark);
-      transform: scale(1.2);
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 800;
+      width: 32px;
+      height: 32px;
+      min-width: 32px;
+      min-height: 32px;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+      padding: 0;
+    }
+
+    .chip-del-btn:hover, .chip-del-btn:active {
+      background: var(--pink-deep);
+      color: white;
+      transform: scale(1.1);
+    }
+
+    .btn-clear-all {
+      background: none;
+      border: 1px dashed var(--pink-deep);
+      color: var(--pink-dark);
+      padding: 6px 12px;
+      border-radius: 14px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .btn-clear-all:hover {
+      background: var(--pink-soft);
     }
 
     /* Toast */
@@ -672,7 +707,7 @@
       </p>
 
       <form onsubmit="verifyAdminPin(event)">
-        <input type="password" id="adminPinInput" class="input-pink" placeholder="••••" maxlength="6" style="text-align: center; font-size: 24px; letter-spacing: 6px; margin-bottom: 18px; width: 100%;" autocomplete="off">
+        <input type="password" id="adminPinInput" class="input-pink" placeholder="••••" maxlength="6" style="text-align: center; font-size: 24px; letter-spacing: 6px; margin-bottom: 18px; width: 100%; border-radius: 30px;" autocomplete="off">
         <div style="display: flex; gap: 10px; justify-content: center;">
           <button type="button" class="btn-secondary" onclick="closeModal('adminPinModal')">Скасувати</button>
           <button type="submit" class="btn-pink">Увійти ✨</button>
@@ -698,23 +733,54 @@
         </div>
       </div>
 
-      <p style="font-size: 13.5px; color: var(--text-muted); margin-bottom: 10px;">
-        Введіть імена дівчат, які будуть на книгообміні:
-      </p>
+      <!-- Action header above chips -->
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+        <span style="font-size: 13.5px; color: var(--text-muted); font-weight: 700;">
+          Імена учасниць:
+        </span>
+        <button type="button" class="btn-clear-all" onclick="adminClearAllGirls()" title="Видалити всі імена і ввести з нуля">
+          🗑️ Очистити все
+        </button>
+      </div>
 
-      <form onsubmit="adminAddGirl(event)" style="display: flex; gap: 8px; margin-bottom: 16px;">
-        <input type="text" id="adminNewNameInput" class="input-pink" placeholder="Ім'я дівчини (наприклад, Юля)" style="flex: 1;" autocomplete="off">
-        <button type="submit" class="btn-pink" style="padding: 12px 20px;">+ Додати</button>
+      <!-- Form supporting batch input (comma or newline) -->
+      <form onsubmit="adminAddGirl(event)" style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 14px;">
+        <div style="display: flex; gap: 8px;">
+          <textarea id="adminNewNameInput" class="input-pink" rows="2" placeholder="Введіть імена (по одному або списком через кому чи з нового рядка)&#10;Наприклад: Аліна, Тетяна, Віка, Марина" style="flex: 1; border-radius: 16px; padding: 10px 14px; font-size: 14px; resize: vertical;"></textarea>
+          <button type="submit" class="btn-pink" style="padding: 12px 18px; align-self: flex-start; white-space: nowrap;">+ Додати</button>
+        </div>
+        <span style="font-size: 12px; color: var(--text-muted);">💡 Можна скопіювати весь список подруг із чату та вставити сюди.</span>
       </form>
 
       <div class="admin-chips-list" id="adminChipsList">
         <!-- Rendered by JS -->
       </div>
 
+      <!-- Save & generate share link block -->
       <div style="border-top: 2px dashed #ffd6e0; padding-top: 16px; margin-top: 10px; display: flex; flex-direction: column; gap: 10px;">
         <button class="btn-pink" onclick="adminSaveAndGenerateLink()">
           💾 Зберегти список і створити посилання для дівчат
         </button>
+
+        <!-- Share Box -->
+        <div id="adminShareBox" style="display: none; background: #fff5f7; border: 2px solid var(--pink-accent); border-radius: var(--radius-md); padding: 14px; text-align: left;">
+          <div style="font-weight: 700; color: var(--pink-dark); font-size: 14px; margin-bottom: 6px;">
+            🎉 Посилання для дівчат готове!
+          </div>
+          <p style="font-size: 12.5px; color: var(--text-muted); margin-bottom: 10px;">
+            Надішли це посилання у спільний чат. Кожна дівчина відкриє його зі смартфона, знайде себе та побачить свій номер!
+          </p>
+          <div style="display: flex; gap: 8px; margin-bottom: 8px;">
+            <input type="text" id="shareLinkInput" class="input-pink" readonly style="flex: 1; font-size: 13px; padding: 10px 14px; background: white;" onclick="this.select()">
+            <button type="button" class="btn-pink" onclick="copyShareLinkDirectly()" style="padding: 10px 16px; white-space: nowrap;">
+              📋 Копіювати
+            </button>
+          </div>
+          <button type="button" id="btnNativeShare" class="btn-secondary" onclick="shareViaNativeApi()" style="width: 100%; display: none; padding: 10px; font-size: 13.5px;">
+            📲 Надіслати у Telegram / Viber
+          </button>
+        </div>
+
         <button class="btn-secondary" onclick="closeModal('adminDashboardModal')">
           Закрити
         </button>
@@ -785,11 +851,9 @@
       const n = names.length;
       if (n < 2) return null;
 
-      // Assign unique random book number 1..N to each girl
       const bookNumbers = Array.from({ length: n }, (_, i) => i + 1);
       shuffle(bookNumbers);
 
-      // Generate deranged indices where target[i] !== i
       const derangedIndices = Array.from({ length: n }, (_, i) => i);
       let isValid = false;
       let iterations = 0;
@@ -817,7 +881,6 @@
 
     /* Data Persistence via URL Hash / LocalStorage / state.json */
     function loadParticipants() {
-      // 1. Try URL hash configuration (for shareable custom links)
       if (window.location.hash && window.location.hash.startsWith('#data=')) {
         try {
           const encoded = window.location.hash.slice(6);
@@ -834,7 +897,6 @@
         }
       }
 
-      // 2. Try LocalStorage
       const saved = localStorage.getItem('BOOK_CLUB_CUSTOM_LIST');
       if (saved) {
         try {
@@ -847,7 +909,6 @@
         } catch(e) {}
       }
 
-      // 3. Try state.json
       fetch('./state.json')
         .then(r => r.json())
         .then(data => {
@@ -862,7 +923,6 @@
         });
     }
 
-    /* Viewed status stored per device in localStorage */
     function isViewedOnThisDevice(girlId) {
       return localStorage.getItem('VIEWED_' + girlId) === 'true';
     }
@@ -871,13 +931,11 @@
       localStorage.setItem('VIEWED_' + girlId, 'true');
     }
 
-    /* Screen Navigation */
     function showScreen(screenId) {
       document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
       document.getElementById(screenId).classList.add('active');
     }
 
-    /* Render Main Girls Grid */
     function renderGirlsGrid() {
       const grid = document.getElementById('girlsGrid');
       grid.innerHTML = '';
@@ -986,6 +1044,7 @@
     function openAdminDashboard() {
       playClick();
       tempAdminNames = participants.map(p => p.name);
+      document.getElementById('adminShareBox').style.display = 'none';
       renderAdminDashboard();
       openModal('adminDashboardModal');
     }
@@ -1010,64 +1069,147 @@
       });
     }
 
+    /* Batch add: supports commas, semicolons, and newlines */
     function adminAddGirl(e) {
-      e.preventDefault();
+      if (e) e.preventDefault();
       const input = document.getElementById('adminNewNameInput');
-      const name = input.value.trim();
-      if (!name) return;
+      const raw = input.value.trim();
+      if (!raw) return;
 
-      if (tempAdminNames.includes(name)) {
-        showToast("Таке ім'я вже є у списку!");
-        return;
-      }
+      const parsedNames = raw
+        .split(/[\n,;]+/)
+        .map(n => n.trim())
+        .filter(n => n.length > 0);
 
-      tempAdminNames.push(name);
+      if (parsedNames.length === 0) return;
+
+      let addedCount = 0;
+      let skippedDuplicates = 0;
+
+      parsedNames.forEach(name => {
+        const exists = tempAdminNames.some(existing => existing.toLowerCase() === name.toLowerCase());
+        if (exists) {
+          skippedDuplicates++;
+        } else {
+          tempAdminNames.push(name);
+          addedCount++;
+        }
+      });
+
       input.value = '';
       playClick();
       renderAdminDashboard();
+
+      if (addedCount > 0) {
+        showToast(`Додано ${addedCount} ${addedCount === 1 ? 'учасницю' : 'учасниць'}! 🌸`);
+      } else if (skippedDuplicates > 0) {
+        showToast("Усі ці імена вже є у списку!");
+      }
     }
 
+    /* Remove girl without any blocking */
     function adminRemoveGirl(idx) {
-      if (tempAdminNames.length <= 2) {
-        showToast("Потрібно щонайменше 2 учасниці!");
-        return;
-      }
       tempAdminNames.splice(idx, 1);
       playClick();
       renderAdminDashboard();
     }
 
+    /* Fast clear all girls */
+    function adminClearAllGirls() {
+      if (tempAdminNames.length === 0) return;
+      tempAdminNames = [];
+      playClick();
+      renderAdminDashboard();
+      showToast("Список очищено! Тепер додайте своїх дівчат 🌸");
+    }
+
+    /* Universal Clipboard Copy */
+    function copyTextToClipboard(text) {
+      if (navigator.clipboard && window.isSecureContext) {
+        return navigator.clipboard.writeText(text).catch(() => fallbackCopy(text));
+      }
+      return fallbackCopy(text);
+    }
+
+    function fallbackCopy(text) {
+      const textArea = document.createElement("textarea");
+      textArea.value = text;
+      textArea.style.position = "fixed";
+      textArea.style.left = "-999999px";
+      textArea.style.top = "-999999px";
+      document.body.appendChild(textArea);
+      textArea.focus();
+      textArea.select();
+      try {
+        document.execCommand('copy');
+      } catch (err) {
+        console.error('Fallback copy failed', err);
+      }
+      document.body.removeChild(textArea);
+      return Promise.resolve();
+    }
+
+    /* Save, derange, and show link */
     function adminSaveAndGenerateLink() {
       if (tempAdminNames.length < 2) {
-        showToast("Потрібно мінімум 2 учасниці!");
+        showToast("Потрібно мінімум 2 учасниці для жеребкування!");
         return;
       }
 
       const generated = generateExchangeParticipants(tempAdminNames);
       if (!generated) {
-        showToast("Помилка генерації деранжування!");
+        showToast("Помилка генерації жеребкування!");
         return;
       }
 
       participants = generated;
       localStorage.setItem('BOOK_CLUB_CUSTOM_LIST', JSON.stringify(participants));
 
-      // Clear previous local viewed flags for clean fresh testing
-      participants.forEach(p => localStorage.removeItem('VIEWED_' + p.id));
+      // Clear previous viewed flags on this device
+      Object.keys(localStorage).forEach(k => {
+        if (k.startsWith('VIEWED_')) localStorage.removeItem(k);
+      });
 
       // Encode into URL hash for shareable instant link
       const encoded = btoa(encodeURIComponent(JSON.stringify(participants)));
+      const fullUrl = window.location.origin + window.location.pathname + '#data=' + encoded;
       window.location.hash = 'data=' + encoded;
 
-      // Copy shareable link to clipboard
-      if (navigator.clipboard) {
-        navigator.clipboard.writeText(window.location.href);
+      // Display the share box with link inside modal
+      const shareBox = document.getElementById('adminShareBox');
+      const shareInput = document.getElementById('shareLinkInput');
+      shareBox.style.display = 'block';
+      shareInput.value = fullUrl;
+
+      // Native share button on mobile
+      const shareBtn = document.getElementById('btnNativeShare');
+      if (navigator.share) {
+        shareBtn.style.display = 'block';
       }
 
-      closeModal('adminDashboardModal');
+      copyTextToClipboard(fullUrl);
       renderGirlsGrid();
       playChime();
-      showToast(`Збережено! Учасниць: ${participants.length} (номери 1..${participants.length}). Посилання скопійовано! 🌸`);
+      showToast(`Збережено! Учасниць: ${participants.length}. Посилання згенеровано! 🌸`);
+    }
+
+    function copyShareLinkDirectly() {
+      const shareInput = document.getElementById('shareLinkInput');
+      copyTextToClipboard(shareInput.value).then(() => {
+        playClick();
+        showToast("Посилання скопійовано в буфер! 📋");
+      });
+    }
+
+    function shareViaNativeApi() {
+      const shareInput = document.getElementById('shareLinkInput');
+      if (navigator.share) {
+        navigator.share({
+          title: 'Таємний Книгообмін 📖✨',
+          text: 'Дівчата, відкривайте посилання та дізнавайтеся свої таємні номери для книгообміну!',
+          url: shareInput.value
+        }).catch(() => {});
+      }
     }
 
     /* Modal Helpers */
@@ -1141,10 +1283,11 @@
       render();
     }
 
-    /* Init */
+    /* Boot & Hash Listener */
     window.addEventListener('DOMContentLoaded', () => {
       loadParticipants();
     });
+    window.addEventListener('hashchange', loadParticipants);
   </script>
 </body>
 </html>
