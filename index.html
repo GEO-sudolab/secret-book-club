@@ -659,7 +659,7 @@
     </section>
   </main>
 
-  <!-- MODAL: PIN CODE (1122) FOR ADMIN -->
+  <!-- MODAL: PIN CODE FOR ADMIN -->
   <div class="modal-overlay" id="adminPinModal">
     <div class="modal-card" style="max-width: 380px; text-align: center;">
       <div class="modal-header">
@@ -668,11 +668,11 @@
       </div>
 
       <p style="font-size: 13.5px; color: var(--text-muted); margin-bottom: 18px;">
-        Введіть PIN-код <strong>1122</strong>, щоб увійти в меню керування:
+        Введіть секретний PIN-код для доступу:
       </p>
 
       <form onsubmit="verifyAdminPin(event)">
-        <input type="password" id="adminPinInput" class="input-pink" placeholder="PIN" maxlength="6" style="text-align: center; font-size: 24px; letter-spacing: 6px; margin-bottom: 18px; width: 100%;" autocomplete="off">
+        <input type="password" id="adminPinInput" class="input-pink" placeholder="••••" maxlength="6" style="text-align: center; font-size: 24px; letter-spacing: 6px; margin-bottom: 18px; width: 100%;" autocomplete="off">
         <div style="display: flex; gap: 10px; justify-content: center;">
           <button type="button" class="btn-secondary" onclick="closeModal('adminPinModal')">Скасувати</button>
           <button type="submit" class="btn-pink">Увійти ✨</button>
@@ -961,7 +961,7 @@
       showToast("Твій номер надійно збережено! 💖");
     }
 
-    /* ADMIN MENU & PIN (1122) */
+    /* ADMIN MENU & PIN AUTH */
     function openAdminPinModal() {
       playClick();
       document.getElementById('adminPinInput').value = '';
