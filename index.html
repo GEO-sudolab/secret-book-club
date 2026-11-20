@@ -120,15 +120,6 @@
       border: 1px solid var(--pink-medium);
     }
 
-    .cloud-sync-status {
-      font-size: 11px;
-      color: #2a9d8f;
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-      font-weight: 700;
-    }
-
     .admin-btn {
       background: white;
       border: 2px solid var(--pink-medium);
@@ -286,7 +277,7 @@
       font-weight: 700;
     }
 
-    /* STEP 1: CONFIRMATION MODAL */
+    /* STEP 1: CONFIRMATION */
     .confirm-box {
       background: white;
       border: 2.5px solid var(--pink-accent);
@@ -569,12 +560,9 @@
       <div class="app-badge">
         <span>📚</span> Таємний Книгообмін
       </div>
-      <div style="display: flex; align-items: center; gap: 8px;">
-        <span class="cloud-sync-status" id="cloudStatus">● Онлайн</span>
-        <button class="admin-btn" onclick="openAdminPinModal()">
-          <span>👑</span> Адмін
-        </button>
-      </div>
+      <button class="admin-btn" onclick="openAdminPinModal()">
+        <span>👑</span> Меню адміністратора
+      </button>
     </header>
 
     <!-- SCREEN 1: GIRLS SELECTION (Головне меню) -->
@@ -711,11 +699,11 @@
       </div>
 
       <p style="font-size: 13.5px; color: var(--text-muted); margin-bottom: 10px;">
-        Додавайте або змінюйте імена учасниць:
+        Введіть імена дівчат, які будуть на книгообміні:
       </p>
 
       <form onsubmit="adminAddGirl(event)" style="display: flex; gap: 8px; margin-bottom: 16px;">
-        <input type="text" id="adminNewNameInput" class="input-pink" placeholder="Ім'я нової дівчини" style="flex: 1;" autocomplete="off">
+        <input type="text" id="adminNewNameInput" class="input-pink" placeholder="Ім'я дівчини (наприклад, Юля)" style="flex: 1;" autocomplete="off">
         <button type="submit" class="btn-pink" style="padding: 12px 20px;">+ Додати</button>
       </form>
 
@@ -723,12 +711,12 @@
         <!-- Rendered by JS -->
       </div>
 
-      <div style="border-top: 2px dashed #ffd6e0; padding-top: 16px; margin-top: 10px; display: flex; gap: 10px;">
-        <button class="btn-secondary" style="flex: 1;" onclick="closeModal('adminDashboardModal')">
-          Закрити
+      <div style="border-top: 2px dashed #ffd6e0; padding-top: 16px; margin-top: 10px; display: flex; flex-direction: column; gap: 10px;">
+        <button class="btn-pink" onclick="adminSaveAndGenerateLink()">
+          💾 Зберегти список і створити посилання для дівчат
         </button>
-        <button class="btn-pink" style="flex: 2;" onclick="adminSaveAndSync()">
-          💾 Зберегти зміни
+        <button class="btn-secondary" onclick="closeModal('adminDashboardModal')">
+          Закрити
         </button>
       </div>
     </div>
@@ -738,23 +726,17 @@
   <div class="toast" id="toastMessage">Повідомлення</div>
 
   <script>
-    /* Cloud Database Config */
-    const CLOUD_DB_URL = "https://api.restful-api.dev/objects/ff808181a09d98f701a1faa851600b55";
-
     /* Default initial participants */
-    const DEFAULT_DATA = {
-      isStarted: true,
-      participants: [
-        { id: "p_1", name: "Юля", myBookNumber: 1, targetBookNumber: 3, hasViewed: false },
-        { id: "p_2", name: "Оля", myBookNumber: 2, targetBookNumber: 4, hasViewed: false },
-        { id: "p_3", name: "Катя", myBookNumber: 3, targetBookNumber: 5, hasViewed: false },
-        { id: "p_4", name: "Маша", myBookNumber: 4, targetBookNumber: 6, hasViewed: false },
-        { id: "p_5", name: "Даша", myBookNumber: 5, targetBookNumber: 1, hasViewed: false },
-        { id: "p_6", name: "Іра", myBookNumber: 6, targetBookNumber: 2, hasViewed: false }
-      ]
-    };
+    const DEFAULT_PARTICIPANTS = [
+      { id: "p_1", name: "Юля", myBookNumber: 1, targetBookNumber: 3 },
+      { id: "p_2", name: "Оля", myBookNumber: 2, targetBookNumber: 4 },
+      { id: "p_3", name: "Катя", myBookNumber: 3, targetBookNumber: 5 },
+      { id: "p_4", name: "Маша", myBookNumber: 4, targetBookNumber: 6 },
+      { id: "p_5", name: "Даша", myBookNumber: 5, targetBookNumber: 1 },
+      { id: "p_6", name: "Іра", myBookNumber: 6, targetBookNumber: 2 }
+    ];
 
-    let state = { ...DEFAULT_DATA };
+    let participants = [...DEFAULT_PARTICIPANTS];
     let tempAdminNames = [];
     let activeParticipant = null;
 
@@ -789,40 +771,6 @@
       gain.connect(audioCtx.destination);
       osc.start();
       osc.stop(audioCtx.currentTime + 0.09);
-    }
-
-    /* Cloud Sync */
-    async function syncFromCloud() {
-      try {
-        const res = await fetch(CLOUD_DB_URL);
-        if (res.ok) {
-          const json = await res.json();
-          if (json && json.data && json.data.participants) {
-            state = json.data;
-            document.getElementById('cloudStatus').innerText = "● Онлайн";
-            renderGirlsGrid();
-          }
-        }
-      } catch (e) {
-        console.warn("Cloud sync fallback to cache", e);
-        document.getElementById('cloudStatus').innerText = "○ Локально";
-      }
-    }
-
-    async function pushToCloud() {
-      try {
-        await fetch(CLOUD_DB_URL, {
-          method: "PUT",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            name: "secret_book_club_sudolab",
-            data: state
-          })
-        });
-        document.getElementById('cloudStatus').innerText = "● Онлайн";
-      } catch (e) {
-        console.error("Cloud push failed", e);
-      }
     }
 
     /* Derangement Algorithm: Rejection Sampling for Guaranteed Unbiased Permutation */
@@ -860,12 +808,67 @@
       }
 
       return names.map((name, i) => ({
-        id: 'p_' + (i + 1) + '_' + Date.now(),
+        id: 'p_' + (i + 1),
         name: name,
         myBookNumber: bookNumbers[i],
-        targetBookNumber: bookNumbers[derangedIndices[i]],
-        hasViewed: false
+        targetBookNumber: bookNumbers[derangedIndices[i]]
       }));
+    }
+
+    /* Data Persistence via URL Hash / LocalStorage / state.json */
+    function loadParticipants() {
+      // 1. Try URL hash configuration (for shareable custom links)
+      if (window.location.hash && window.location.hash.startsWith('#data=')) {
+        try {
+          const encoded = window.location.hash.slice(6);
+          const decoded = decodeURIComponent(atob(encoded));
+          const list = JSON.parse(decoded);
+          if (Array.isArray(list) && list.length >= 2) {
+            participants = list;
+            localStorage.setItem('BOOK_CLUB_CUSTOM_LIST', JSON.stringify(list));
+            renderGirlsGrid();
+            return;
+          }
+        } catch(e) {
+          console.warn("Invalid hash data", e);
+        }
+      }
+
+      // 2. Try LocalStorage
+      const saved = localStorage.getItem('BOOK_CLUB_CUSTOM_LIST');
+      if (saved) {
+        try {
+          const list = JSON.parse(saved);
+          if (Array.isArray(list) && list.length >= 2) {
+            participants = list;
+            renderGirlsGrid();
+            return;
+          }
+        } catch(e) {}
+      }
+
+      // 3. Try state.json
+      fetch('./state.json')
+        .then(r => r.json())
+        .then(data => {
+          if (data && data.participants) {
+            participants = data.participants;
+            renderGirlsGrid();
+          }
+        })
+        .catch(() => {
+          participants = DEFAULT_PARTICIPANTS;
+          renderGirlsGrid();
+        });
+    }
+
+    /* Viewed status stored per device in localStorage */
+    function isViewedOnThisDevice(girlId) {
+      return localStorage.getItem('VIEWED_' + girlId) === 'true';
+    }
+
+    function markViewedOnThisDevice(girlId) {
+      localStorage.setItem('VIEWED_' + girlId, 'true');
     }
 
     /* Screen Navigation */
@@ -881,19 +884,21 @@
 
       const emojis = ['🌸', '✨', '🎀', '🌷', '🧁', '🍓', '☕', '📖', '💫', '🧸'];
 
-      state.participants.forEach((p, idx) => {
+      participants.forEach((p, idx) => {
+        const isDone = isViewedOnThisDevice(p.id);
+
         const card = document.createElement('div');
-        card.className = `girl-card-btn ${p.hasViewed ? 'done' : ''}`;
+        card.className = `girl-card-btn ${isDone ? 'done' : ''}`;
         card.innerHTML = `
           <div class="girl-avatar">${emojis[idx % emojis.length]}</div>
           <div class="girl-name">${p.name}</div>
-          <div class="girl-status">${p.hasViewed ? '✅ Номер збережено' : 'Тисни на своє ім\'я'}</div>
+          <div class="girl-status">${isDone ? '✅ Номер збережено' : 'Тисни на своє ім\'я'}</div>
         `;
 
-        if (!p.hasViewed) {
+        if (!isDone) {
           card.onclick = () => handleSelectGirl(p.id);
         } else {
-          card.onclick = () => showToast(`${p.name} вже відкривала свій номер! 🤫`);
+          card.onclick = () => showToast(`Ти вже зберегла свій номер! 🤫`);
         }
 
         grid.appendChild(card);
@@ -902,7 +907,7 @@
 
     /* STEP 1: Select Girl -> Confirmation */
     function handleSelectGirl(id) {
-      const p = state.participants.find(item => item.id === id);
+      const p = participants.find(item => item.id === id);
       if (!p) return;
 
       activeParticipant = p;
@@ -943,18 +948,17 @@
       }, 700);
     }
 
-    /* STEP 4: Finish & Lock in Cloud */
-    async function finishSecretViewAndLock() {
+    /* STEP 4: Finish & Lock on Device */
+    function finishSecretViewAndLock() {
       if (activeParticipant) {
-        activeParticipant.hasViewed = true;
-        await pushToCloud();
+        markViewedOnThisDevice(activeParticipant.id);
       }
 
       playClick();
       activeParticipant = null;
       renderGirlsGrid();
       showScreen('screenSelect');
-      showToast("Твій номер надійно приховано! 💖");
+      showToast("Твій номер надійно збережено! 💖");
     }
 
     /* ADMIN MENU & PIN (1122) */
@@ -981,7 +985,7 @@
 
     function openAdminDashboard() {
       playClick();
-      tempAdminNames = state.participants.map(p => p.name);
+      tempAdminNames = participants.map(p => p.name);
       renderAdminDashboard();
       openModal('adminDashboardModal');
     }
@@ -1033,7 +1037,7 @@
       renderAdminDashboard();
     }
 
-    async function adminSaveAndSync() {
+    function adminSaveAndGenerateLink() {
       if (tempAdminNames.length < 2) {
         showToast("Потрібно мінімум 2 учасниці!");
         return;
@@ -1045,14 +1049,25 @@
         return;
       }
 
-      state.participants = generated;
-      state.isStarted = true;
+      participants = generated;
+      localStorage.setItem('BOOK_CLUB_CUSTOM_LIST', JSON.stringify(participants));
 
-      await pushToCloud();
+      // Clear previous local viewed flags for clean fresh testing
+      participants.forEach(p => localStorage.removeItem('VIEWED_' + p.id));
+
+      // Encode into URL hash for shareable instant link
+      const encoded = btoa(encodeURIComponent(JSON.stringify(participants)));
+      window.location.hash = 'data=' + encoded;
+
+      // Copy shareable link to clipboard
+      if (navigator.clipboard) {
+        navigator.clipboard.writeText(window.location.href);
+      }
+
       closeModal('adminDashboardModal');
       renderGirlsGrid();
       playChime();
-      showToast(`Збережено! Учасниць: ${state.participants.length} (номери 1..${state.participants.length}) 🌸`);
+      showToast(`Збережено! Учасниць: ${participants.length} (номери 1..${participants.length}). Посилання скопійовано! 🌸`);
     }
 
     /* Modal Helpers */
@@ -1069,7 +1084,7 @@
       const toast = document.getElementById('toastMessage');
       toast.innerText = msg;
       toast.classList.add('show');
-      setTimeout(() => toast.classList.remove('show'), 2800);
+      setTimeout(() => toast.classList.remove('show'), 3500);
     }
 
     /* Confetti */
@@ -1128,9 +1143,7 @@
 
     /* Init */
     window.addEventListener('DOMContentLoaded', () => {
-      syncFromCloud();
-      // Auto refresh from cloud every 5 seconds
-      setInterval(syncFromCloud, 5000);
+      loadParticipants();
     });
   </script>
 </body>

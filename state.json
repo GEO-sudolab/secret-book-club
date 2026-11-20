@@ -1,0 +1,10 @@
+{
+  "participants": [
+    { "id": "p_1", "name": "Юля", "myBookNumber": 1, "targetBookNumber": 3, "hasViewed": false },
+    { "id": "p_2", "name": "Оля", "myBookNumber": 2, "targetBookNumber": 4, "hasViewed": false },
+    { "id": "p_3", "name": "Катя", "myBookNumber": 3, "targetBookNumber": 5, "hasViewed": false },
+    { "id": "p_4", "name": "Маша", "myBookNumber": 4, "targetBookNumber": 6, "hasViewed": false },
+    { "id": "p_5", "name": "Даша", "myBookNumber": 5, "targetBookNumber": 1, "hasViewed": false },
+    { "id": "p_6", "name": "Іра", "myBookNumber": 6, "targetBookNumber": 2, "hasViewed": false }
+  ]
+}
