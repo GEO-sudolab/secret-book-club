@@ -1,0 +1,1056 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Таємний Книгообмін 📖✨</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@400;600;700&family=Playfair+Display:ital,wght@0,600;0,800;1,600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-gradient: radial-gradient(circle at 10% 20%, #ffe8ed 0%, #fff0f3 50%, #ffd6e0 100%);
+      --pink-soft: #ffe5ec;
+      --pink-medium: #ffb3c6;
+      --pink-accent: #ff8fab;
+      --pink-deep: #fb6f92;
+      --pink-dark: #c9184a;
+      --pink-shadow: rgba(251, 111, 146, 0.28);
+      --text-main: #4a1525;
+      --text-muted: #8a485a;
+      --card-bg: rgba(255, 255, 255, 0.95);
+      --radius-xl: 32px;
+      --radius-lg: 22px;
+      --radius-md: 16px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      user-select: none;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body {
+      font-family: 'Comfortaa', cursive, sans-serif;
+      background: var(--bg-gradient);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: var(--text-main);
+      overflow-x: hidden;
+      position: relative;
+      padding: 16px;
+    }
+
+    /* Ambient decor */
+    .sparkle-bg {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      background-image: 
+        radial-gradient(circle at 12% 18%, rgba(255, 143, 171, 0.35) 0, transparent 50px),
+        radial-gradient(circle at 88% 22%, rgba(251, 111, 146, 0.25) 0, transparent 70px),
+        radial-gradient(circle at 50% 88%, rgba(255, 179, 198, 0.35) 0, transparent 60px);
+    }
+
+    .floating-icons span {
+      position: absolute;
+      font-size: 26px;
+      opacity: 0.35;
+      animation: floatSmooth 7s ease-in-out infinite alternate;
+      pointer-events: none;
+    }
+    .fl-1 { top: 6%; left: 6%; animation-delay: 0s; }
+    .fl-2 { top: 12%; right: 8%; animation-delay: 2s; }
+    .fl-3 { bottom: 8%; left: 8%; animation-delay: 4s; }
+    .fl-4 { bottom: 10%; right: 8%; animation-delay: 1.5s; }
+
+    @keyframes floatSmooth {
+      0% { transform: translateY(0px) rotate(0deg); }
+      100% { transform: translateY(-20px) rotate(10deg); }
+    }
+
+    /* Main Container */
+    .app-card {
+      position: relative;
+      z-index: 10;
+      width: 100%;
+      max-width: 660px;
+      background: var(--card-bg);
+      backdrop-filter: blur(18px);
+      border: 3px solid #ffffff;
+      border-radius: var(--radius-xl);
+      box-shadow: 0 25px 60px var(--pink-shadow), 0 0 0 1px rgba(255, 179, 198, 0.4);
+      padding: 34px 24px;
+      text-align: center;
+      transition: all 0.3s ease;
+    }
+
+    @media (max-width: 480px) {
+      .app-card {
+        padding: 24px 16px;
+        border-radius: 26px;
+      }
+    }
+
+    /* Top Bar */
+    .top-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 22px;
+      padding-bottom: 14px;
+      border-bottom: 2px dashed #ffd6e0;
+    }
+
+    .app-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      background: var(--pink-soft);
+      padding: 6px 16px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--pink-dark);
+      border: 1px solid var(--pink-medium);
+    }
+
+    .cloud-sync-status {
+      font-size: 11px;
+      color: #2a9d8f;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-weight: 700;
+    }
+
+    .menu-btn {
+      background: white;
+      border: 2px solid var(--pink-medium);
+      color: var(--pink-dark);
+      padding: 7px 14px;
+      border-radius: 16px;
+      font-family: inherit;
+      font-weight: 700;
+      font-size: 13px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      box-shadow: 0 4px 12px rgba(251, 111, 146, 0.12);
+      transition: all 0.2s ease;
+    }
+
+    .menu-btn:hover {
+      background: var(--pink-soft);
+      transform: translateY(-2px);
+    }
+
+    h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: 30px;
+      color: var(--pink-dark);
+      margin-bottom: 8px;
+    }
+
+    .subtitle {
+      color: var(--text-muted);
+      font-size: 14px;
+      line-height: 1.5;
+      margin-bottom: 24px;
+    }
+
+    /* Buttons */
+    .btn-pink {
+      background: linear-gradient(135deg, var(--pink-accent) 0%, var(--pink-deep) 100%);
+      color: white;
+      border: none;
+      padding: 15px 32px;
+      border-radius: 50px;
+      font-family: inherit;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 10px 24px rgba(251, 111, 146, 0.4);
+      transition: all 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .btn-pink:hover {
+      transform: translateY(-2px) scale(1.02);
+      box-shadow: 0 14px 28px rgba(251, 111, 146, 0.5);
+    }
+
+    .btn-pink:active {
+      transform: translateY(1px);
+    }
+
+    .btn-secondary {
+      background: white;
+      color: var(--pink-dark);
+      border: 2px solid var(--pink-medium);
+      padding: 12px 22px;
+      border-radius: 30px;
+      font-family: inherit;
+      font-size: 14.5px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-secondary:hover {
+      background: var(--pink-soft);
+    }
+
+    /* Screens */
+    .screen {
+      display: none;
+      animation: fadeIn 0.35s ease;
+    }
+    .screen.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* GIRLS GRID */
+    .girls-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+      gap: 14px;
+      margin: 18px 0 28px;
+    }
+
+    .girl-card-btn {
+      background: white;
+      border: 2.5px solid var(--pink-soft);
+      border-radius: var(--radius-lg);
+      padding: 18px 12px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      transition: all 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      box-shadow: 0 6px 14px rgba(251, 111, 146, 0.08);
+      position: relative;
+    }
+
+    .girl-card-btn:hover:not(.done) {
+      transform: translateY(-4px) scale(1.03);
+      border-color: var(--pink-accent);
+      box-shadow: 0 12px 22px rgba(251, 111, 146, 0.25);
+    }
+
+    .girl-avatar {
+      font-size: 32px;
+      background: var(--pink-soft);
+      width: 54px;
+      height: 54px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .girl-name {
+      font-weight: 700;
+      font-size: 15px;
+      color: var(--text-main);
+    }
+
+    .girl-status {
+      font-size: 11.5px;
+      color: var(--text-muted);
+    }
+
+    .girl-card-btn.done {
+      opacity: 0.65;
+      background: #faf4f5;
+      border-color: #ebd3da;
+      cursor: not-allowed;
+    }
+    .girl-card-btn.done .girl-status {
+      color: #2a9d8f;
+      font-weight: 700;
+    }
+
+    /* STEP 1: CONFIRMATION MODAL */
+    .confirm-box {
+      background: white;
+      border: 2.5px solid var(--pink-accent);
+      border-radius: var(--radius-xl);
+      padding: 32px 20px;
+      box-shadow: 0 18px 40px rgba(251, 111, 146, 0.25);
+      margin: 15px 0;
+    }
+
+    .big-question {
+      font-size: 19px;
+      font-weight: 800;
+      color: var(--pink-dark);
+      text-transform: uppercase;
+      margin: 16px 0;
+      line-height: 1.4;
+      letter-spacing: 0.5px;
+    }
+
+    /* STEP 2: INTERACTIVE PRESENT */
+    .magic-present-wrap {
+      margin: 25px auto;
+      width: 220px;
+      height: 200px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+
+    .magic-present-icon {
+      font-size: 96px;
+      display: inline-block;
+      animation: presentWobble 2.5s infinite ease-in-out;
+      filter: drop-shadow(0 14px 22px rgba(251, 111, 146, 0.35));
+      transition: transform 0.25s;
+    }
+
+    .magic-present-icon:hover {
+      transform: scale(1.1) rotate(6deg);
+    }
+
+    @keyframes presentWobble {
+      0%, 100% { transform: translateY(0) rotate(0deg); }
+      25% { transform: translateY(-7px) rotate(-4deg); }
+      75% { transform: translateY(-3px) rotate(4deg); }
+    }
+
+    /* STEP 3: DUAL REVEAL CARD */
+    .dual-reveal-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin: 20px 0 24px;
+    }
+
+    @media (max-width: 500px) {
+      .dual-reveal-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .secret-box-item {
+      background: white;
+      border-radius: var(--radius-lg);
+      padding: 22px 14px;
+      box-shadow: 0 10px 25px rgba(251, 111, 146, 0.15);
+      border: 2px solid var(--pink-soft);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .box-my-book {
+      border-color: #ffd166;
+      background: #fffdf7;
+    }
+    .box-target-book {
+      border-color: var(--pink-accent);
+      background: #fff9fb;
+    }
+
+    .box-tag {
+      font-size: 12px;
+      font-weight: 700;
+      padding: 4px 12px;
+      border-radius: 12px;
+      margin-bottom: 8px;
+    }
+    .tag-yellow {
+      background: #ffeaa7;
+      color: #7a5000;
+    }
+    .tag-pink {
+      background: var(--pink-soft);
+      color: var(--pink-dark);
+    }
+
+    .big-number {
+      font-family: 'Playfair Display', serif;
+      font-size: 60px;
+      font-weight: 800;
+      line-height: 1;
+      margin: 8px 0;
+    }
+    .num-yellow { color: #d48b00; }
+    .num-pink { color: var(--pink-dark); }
+
+    .box-instruction {
+      font-size: 13px;
+      color: var(--text-muted);
+      line-height: 1.4;
+    }
+
+    /* ALL DONE BANNER */
+    .all-done-banner {
+      background: white;
+      border: 2px dashed var(--pink-deep);
+      border-radius: var(--radius-xl);
+      padding: 24px 16px;
+      margin-top: 15px;
+      box-shadow: 0 10px 30px rgba(251, 111, 146, 0.15);
+    }
+
+    /* MODALS */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(74, 21, 37, 0.6);
+      backdrop-filter: blur(8px);
+      z-index: 100;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+    }
+
+    .modal-card {
+      background: white;
+      border-radius: var(--radius-xl);
+      padding: 30px 22px;
+      width: 100%;
+      max-width: 520px;
+      box-shadow: 0 30px 70px rgba(0,0,0,0.3);
+      max-height: 90vh;
+      overflow-y: auto;
+      text-align: left;
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+      border-bottom: 2px solid var(--pink-soft);
+      padding-bottom: 12px;
+    }
+
+    .modal-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 21px;
+      color: var(--pink-dark);
+    }
+
+    .close-modal-btn {
+      background: none;
+      border: none;
+      font-size: 24px;
+      cursor: pointer;
+      color: var(--pink-deep);
+    }
+
+    .input-pink {
+      padding: 14px 18px;
+      border-radius: 30px;
+      border: 2px solid var(--pink-medium);
+      font-family: inherit;
+      font-size: 15px;
+      outline: none;
+      background: white;
+      transition: border-color 0.2s;
+    }
+    .input-pink:focus {
+      border-color: var(--pink-deep);
+      box-shadow: 0 0 0 3px rgba(251, 111, 146, 0.2);
+    }
+
+    .reveal-card {
+      background: #fffafb;
+      border: 1.5px solid var(--pink-medium);
+      border-radius: var(--radius-md);
+      padding: 13px 16px;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 14px;
+    }
+
+    /* Toast */
+    .toast {
+      position: fixed;
+      bottom: 25px;
+      left: 50%;
+      transform: translateX(-50%) translateY(100px);
+      background: var(--pink-dark);
+      color: white;
+      padding: 12px 24px;
+      border-radius: 30px;
+      font-size: 14px;
+      font-weight: 700;
+      box-shadow: 0 10px 25px rgba(201, 24, 74, 0.4);
+      z-index: 200;
+      opacity: 0;
+      transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      pointer-events: none;
+    }
+    .toast.show {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
+    }
+
+    canvas#confettiCanvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 999;
+    }
+  </style>
+</head>
+<body>
+
+  <canvas id="confettiCanvas"></canvas>
+
+  <div class="sparkle-bg"></div>
+  <div class="floating-icons">
+    <span class="fl-1">📖</span>
+    <span class="fl-2">✨</span>
+    <span class="fl-3">🎀</span>
+    <span class="fl-4">☕</span>
+  </div>
+
+  <main class="app-card">
+    <!-- Top Bar -->
+    <header class="top-bar">
+      <div class="app-badge">
+        <span>📚</span> Таємний Книгообмін
+      </div>
+      <div style="display: flex; align-items: center; gap: 8px;">
+        <span class="cloud-sync-status" id="cloudStatus">● Онлайн</span>
+        <button class="menu-btn" onclick="openModal('menuModal')">
+          <span>⚙️</span> Меню
+        </button>
+      </div>
+    </header>
+
+    <!-- SCREEN 1: GIRLS SELECTION (Головне меню) -->
+    <section id="screenSelect" class="screen active">
+      <h1>Хто обирає? 🌸</h1>
+      <p class="subtitle">
+        Знайди своє ім'я у списку нижче та натисни на нього, щоб отримати таємні номери!
+      </p>
+
+      <div class="girls-grid" id="girlsGrid">
+        <!-- Rendered by JS -->
+      </div>
+
+      <div id="allDoneSection" class="all-done-banner" style="display: none;">
+        <h2 style="font-family: 'Playfair Display', serif; color: var(--pink-dark); margin-bottom: 8px;">
+          🎉 Усі дівчата обрали свої книги!
+        </h2>
+        <p style="font-size: 14px; color: var(--text-muted); margin-bottom: 20px;">
+          Книги наклеєні та розібрані. Можна розпаковувати подарунки! 🥂📚
+        </p>
+        <button class="btn-pink" onclick="openGrandRevealPinModal()">
+          🤫 Привідкрити завісу (PIN 1122)
+        </button>
+      </div>
+    </section>
+
+    <!-- SCREEN 2: MULTI-STEP CONFIRMATION (Захист від випадкового кліку) -->
+    <section id="screenConfirm" class="screen">
+      <div class="confirm-box">
+        <div style="font-size: 44px; margin-bottom: 6px;">🌸</div>
+        <h2 id="confirmGreetingTitle" style="color: var(--pink-dark); font-family: 'Playfair Display', serif;">
+          Вітаю, Юлю!
+        </h2>
+        
+        <div class="big-question">
+          ТИ ГОТОВА ПОБАЧИТИ, ЯКИЙ В ТЕБЕ НОМЕР?
+        </div>
+
+        <p style="font-size: 13.5px; color: var(--text-muted); line-height: 1.5; margin-bottom: 24px;">
+          Переконайся, що поруч немає інших дівчат, щоб твій номер книги залишився повною таємницею!
+        </p>
+
+        <div style="display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;">
+          <button class="btn-secondary" onclick="showScreen('screenSelect')">
+            ← Ой, це не я!
+          </button>
+          <button class="btn-pink" onclick="proceedToPresentStep()">
+            💖 Так, я готова!
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- SCREEN 3: INTERACTIVE PRESENT (Магічний подарунок) -->
+    <section id="screenPresent" class="screen">
+      <div class="app-badge" id="presentGirlBadge" style="margin-bottom: 12px;">Юля 💕</div>
+      <h1>Твій чарівний пакунок ✨</h1>
+      <p class="subtitle" style="margin-bottom: 15px;">
+        Натисни на подарунок, щоб відкрити свої таємні номери!
+      </p>
+
+      <div class="magic-present-wrap" onclick="performGiftReveal()">
+        <div class="magic-present-icon" id="presentBoxIcon">🎁</div>
+      </div>
+
+      <button class="btn-pink" onclick="performGiftReveal()">
+        ✨ Відкрити мій номерок ✨
+      </button>
+    </section>
+
+    <!-- SCREEN 4: SECRET RESULTS DISPLAY (Дві цифри) -->
+    <section id="screenSecret" class="screen">
+      <div class="app-badge" id="secretGirlBadge" style="margin-bottom: 12px;">Юля 💕</div>
+      <h1 style="font-size: 26px;">Твоя таємниця книгообміну</h1>
+      <p class="subtitle" style="margin-bottom: 18px;">
+        Збережи ці дві цифри: одну наклей на свій пакунок, а іншу забери собі!
+      </p>
+
+      <div class="dual-reveal-grid">
+        <!-- Box 1: Номер її книги -->
+        <div class="secret-box-item box-my-book">
+          <div class="box-tag tag-yellow">🏷️ Твоя книга</div>
+          <div class="big-number num-yellow" id="myBookNumberDisplay">№ 1</div>
+          <div class="box-instruction">
+            <strong>Наклей цей номер</strong> на свою принесену книгу і поклади її на стіл.
+          </div>
+        </div>
+
+        <!-- Box 2: Виграшна книга -->
+        <div class="secret-box-item box-target-book">
+          <div class="box-tag tag-pink">🎁 Твій подарунок</div>
+          <div class="big-number num-pink" id="targetBookNumberDisplay">№ 4</div>
+          <div class="box-instruction">
+            <strong>Забери зі столу книгу</strong> з цим номером! Це гарантовано не твоя книга.
+          </div>
+        </div>
+      </div>
+
+      <p style="font-size: 12.5px; color: var(--text-muted); margin-bottom: 20px;">
+        🔒 Ти не знаєш, чия книга під твоїм виграшним номером — це відкриється наприкінці вечора!
+      </p>
+
+      <button class="btn-pink" onclick="finishSecretViewAndLock()">
+        💖 Я все зберегла! Закрити мій екран
+      </button>
+    </section>
+  </main>
+
+  <!-- MODAL: PIN CODE (1122) -->
+  <div class="modal-overlay" id="pinModal">
+    <div class="modal-card" style="max-width: 380px; text-align: center;">
+      <div class="modal-header">
+        <h3 class="modal-title">Вхід організаторки 🔐</h3>
+        <button class="close-modal-btn" onclick="closeModal('pinModal')">✕</button>
+      </div>
+
+      <p style="font-size: 13.5px; color: var(--text-muted); margin-bottom: 18px;">
+        Введіть PIN-код <strong>1122</strong>, щоб привідкрити завісу:
+      </p>
+
+      <form onsubmit="verifyPinAndShow(event)">
+        <input type="password" id="pinInput" class="input-pink" placeholder="PIN" maxlength="6" style="text-align: center; font-size: 24px; letter-spacing: 6px; margin-bottom: 18px; width: 100%;" autocomplete="off">
+        <div style="display: flex; gap: 10px; justify-content: center;">
+          <button type="button" class="btn-secondary" onclick="closeModal('pinModal')">Скасувати</button>
+          <button type="submit" class="btn-pink">Відкрити ✨</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL: GRAND REVEAL (Привідкриття завіси) -->
+  <div class="modal-overlay" id="revealModal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 class="modal-title">Таємна завіса відкрита! 🥂📖</h3>
+        <button class="close-modal-btn" onclick="closeModal('revealModal')">✕</button>
+      </div>
+
+      <p style="font-size: 13.5px; color: var(--text-muted); margin-bottom: 18px;">
+        Ось розкладка: хто під якою цифрою приніс книгу, і кому вона дісталася!
+      </p>
+
+      <div id="revealListContainer">
+        <!-- Rendered by JS -->
+      </div>
+
+      <div style="margin-top: 20px;">
+        <button class="btn-pink" style="width: 100%;" onclick="closeModal('revealModal')">
+          Закрити завісу
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: MENU -->
+  <div class="modal-overlay" id="menuModal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 class="modal-title">Меню зустрічі ⚙️</h3>
+        <button class="close-modal-btn" onclick="closeModal('menuModal')">✕</button>
+      </div>
+
+      <p style="font-size: 13.5px; color: var(--text-muted); margin-bottom: 18px;">
+        Керування книгообміном клубу.
+      </p>
+
+      <div style="display: flex; flex-direction: column; gap: 12px;">
+        <button class="btn-secondary" style="text-align: left;" onclick="closeModal('menuModal'); openGrandRevealPinModal();">
+          🤫 Привідкрити завісу (потрібен PIN 1122)
+        </button>
+        <button class="btn-secondary" style="text-align: left; color: #c9184a; border-color: #ffb3c6;" onclick="resetExchangePrompt()">
+          🔄 Скинути всі номери та перетасувати
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div class="toast" id="toastMessage">Повідомлення</div>
+
+  <script>
+    /* Cloud Database Config (api.restful-api.dev object) */
+    const CLOUD_DB_URL = "https://api.restful-api.dev/objects/ff808181a09d98f701a1faa851600b55";
+
+    /* Default participants */
+    const DEFAULT_DATA = {
+      isStarted: true,
+      participants: [
+        { id: "p_1", name: "Юля", myBookNumber: 1, targetBookNumber: 3, hasViewed: false },
+        { id: "p_2", name: "Оля", myBookNumber: 2, targetBookNumber: 4, hasViewed: false },
+        { id: "p_3", name: "Катя", myBookNumber: 3, targetBookNumber: 5, hasViewed: false },
+        { id: "p_4", name: "Маша", myBookNumber: 4, targetBookNumber: 6, hasViewed: false },
+        { id: "p_5", name: "Даша", myBookNumber: 5, targetBookNumber: 1, hasViewed: false },
+        { id: "p_6", name: "Іра", myBookNumber: 6, targetBookNumber: 2, hasViewed: false }
+      ]
+    };
+
+    let state = { ...DEFAULT_DATA };
+    let activeParticipant = null;
+
+    /* Web Audio Sounds */
+    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    function playChime() {
+      if (!audioCtx) return;
+      const notes = [523.25, 659.25, 783.99, 1046.50];
+      notes.forEach((freq, i) => {
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.frequency.value = freq;
+        osc.type = 'sine';
+        gain.gain.setValueAtTime(0.08, audioCtx.currentTime + i * 0.1);
+        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + i * 0.1 + 0.45);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start(audioCtx.currentTime + i * 0.1);
+        osc.stop(audioCtx.currentTime + i * 0.1 + 0.5);
+      });
+    }
+
+    function playClick() {
+      if (!audioCtx) return;
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.frequency.value = 820;
+      osc.type = 'triangle';
+      gain.gain.setValueAtTime(0.04, audioCtx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.08);
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+      osc.start();
+      osc.stop(audioCtx.currentTime + 0.09);
+    }
+
+    /* Cloud Sync */
+    async function syncFromCloud() {
+      try {
+        const res = await fetch(CLOUD_DB_URL);
+        if (res.ok) {
+          const json = await res.json();
+          if (json && json.data && json.data.participants) {
+            state = json.data;
+            document.getElementById('cloudStatus').innerText = "● Онлайн";
+            renderGirlsGrid();
+          }
+        }
+      } catch (e) {
+        console.warn("Cloud sync fallback to local cache", e);
+        document.getElementById('cloudStatus').innerText = "○ Локально";
+      }
+    }
+
+    async function pushToCloud() {
+      try {
+        await fetch(CLOUD_DB_URL, {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            name: "secret_book_club_sudolab",
+            data: state
+          })
+        });
+        document.getElementById('cloudStatus').innerText = "● Онлайн";
+      } catch (e) {
+        console.error("Cloud push failed", e);
+      }
+    }
+
+    /* Screen Navigation */
+    function showScreen(screenId) {
+      document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+      document.getElementById(screenId).classList.add('active');
+    }
+
+    /* Render Grid */
+    function renderGirlsGrid() {
+      const grid = document.getElementById('girlsGrid');
+      grid.innerHTML = '';
+
+      const emojis = ['🌸', '✨', '🎀', '🌷', '🧁', '🍓', '☕', '📖', '💫', '🧸'];
+      let allDone = true;
+
+      state.participants.forEach((p, idx) => {
+        if (!p.hasViewed) allDone = false;
+
+        const card = document.createElement('div');
+        card.className = `girl-card-btn ${p.hasViewed ? 'done' : ''}`;
+        card.innerHTML = `
+          <div class="girl-avatar">${emojis[idx % emojis.length]}</div>
+          <div class="girl-name">${p.name}</div>
+          <div class="girl-status">${p.hasViewed ? '✅ Номер збережено' : 'Тисни на своє ім\'я'}</div>
+        `;
+
+        if (!p.hasViewed) {
+          card.onclick = () => handleSelectGirl(p.id);
+        } else {
+          card.onclick = () => showToast(`${p.name} вже відкривала свій номер! 🤫`);
+        }
+
+        grid.appendChild(card);
+      });
+
+      document.getElementById('allDoneSection').style.display = allDone ? 'block' : 'none';
+    }
+
+    /* STEP 1: Select Girl -> Confirmation */
+    function handleSelectGirl(id) {
+      const p = state.participants.find(item => item.id === id);
+      if (!p) return;
+
+      activeParticipant = p;
+      playClick();
+
+      document.getElementById('confirmGreetingTitle').innerText = `Вітаю, ${p.name}! 🌸`;
+      showScreen('screenConfirm');
+    }
+
+    /* STEP 2: Proceed to Present Screen */
+    function proceedToPresentStep() {
+      if (!activeParticipant) return;
+      playClick();
+
+      document.getElementById('presentGirlBadge').innerText = `${activeParticipant.name} 💕`;
+      showScreen('screenPresent');
+    }
+
+    /* STEP 3: Reveal Gift with Suspense Animation */
+    function performGiftReveal() {
+      if (!activeParticipant) return;
+
+      const icon = document.getElementById('presentBoxIcon');
+      icon.style.animation = 'presentWobble 0.15s infinite';
+      playClick();
+
+      setTimeout(() => {
+        icon.style.animation = 'presentWobble 2.5s infinite ease-in-out';
+
+        document.getElementById('secretGirlBadge').innerText = `${activeParticipant.name} 💕`;
+        document.getElementById('myBookNumberDisplay').innerText = `№ ${activeParticipant.myBookNumber}`;
+        document.getElementById('targetBookNumberDisplay').innerText = `№ ${activeParticipant.targetBookNumber}`;
+
+        playChime();
+        launchConfetti();
+
+        showScreen('screenSecret');
+      }, 700);
+    }
+
+    /* STEP 4: Finish & Lock in Cloud */
+    async function finishSecretViewAndLock() {
+      if (activeParticipant) {
+        activeParticipant.hasViewed = true;
+        await pushToCloud();
+      }
+
+      playClick();
+      activeParticipant = null;
+      renderGirlsGrid();
+      showScreen('screenSelect');
+      showToast("Твій номер надійно приховано! 💖");
+    }
+
+    /* PIN Code Verification (1122) for Grand Reveal */
+    function openGrandRevealPinModal() {
+      playClick();
+      document.getElementById('pinInput').value = '';
+      openModal('pinModal');
+      setTimeout(() => document.getElementById('pinInput').focus(), 150);
+    }
+
+    function verifyPinAndShow(e) {
+      e.preventDefault();
+      const enteredPin = document.getElementById('pinInput').value.trim();
+
+      if (enteredPin === '1122') {
+        closeModal('pinModal');
+        showGrandRevealModal();
+      } else {
+        showToast("Невірний пароль! Спробуйте ще раз ❌");
+        document.getElementById('pinInput').value = '';
+        document.getElementById('pinInput').focus();
+      }
+    }
+
+    function showGrandRevealModal() {
+      playClick();
+      const container = document.getElementById('revealListContainer');
+      container.innerHTML = '';
+
+      const bookOwnerMap = {};
+      state.participants.forEach(p => {
+        bookOwnerMap[p.myBookNumber] = p.name;
+      });
+
+      state.participants.forEach(p => {
+        const bookOwner = bookOwnerMap[p.targetBookNumber] || 'Невідомо';
+        const card = document.createElement('div');
+        card.className = 'reveal-card';
+        card.innerHTML = `
+          <div>
+            <strong>${p.name}</strong> 
+            <span style="color: var(--text-muted); font-size: 13px;">(принесла №${p.myBookNumber})</span>
+          </div>
+          <div>
+            ➡️ взяла <strong>Книгу №${p.targetBookNumber}</strong> 
+            <span style="color: var(--pink-dark); font-weight: 700;">(від ${bookOwner})</span>
+          </div>
+        `;
+        container.appendChild(card);
+      });
+
+      openModal('revealModal');
+      launchConfetti();
+    }
+
+    /* Modals & Reset */
+    function openModal(id) {
+      playClick();
+      document.getElementById(id).style.display = 'flex';
+    }
+
+    function closeModal(id) {
+      document.getElementById(id).style.display = 'none';
+    }
+
+    async function resetExchangePrompt() {
+      const pin = prompt("Введіть PIN 1122 для скидання книгообміну:");
+      if (pin === '1122') {
+        state.participants.forEach(p => p.hasViewed = false);
+        await pushToCloud();
+        closeModal('menuModal');
+        renderGirlsGrid();
+        showScreen('screenSelect');
+        showToast("Скинуто! Можна проходити знову.");
+      } else if (pin !== null) {
+        showToast("Невірний PIN! Скидання скасовано.");
+      }
+    }
+
+    function showToast(msg) {
+      const toast = document.getElementById('toastMessage');
+      toast.innerText = msg;
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 2800);
+    }
+
+    /* Confetti */
+    function launchConfetti() {
+      const canvas = document.getElementById('confettiCanvas');
+      const ctx = canvas.getContext('2d');
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+
+      const particles = [];
+      const colors = ['#ff8fab', '#fb6f92', '#c9184a', '#ffb3c6', '#ffd166', '#ffffff'];
+
+      for (let i = 0; i < 90; i++) {
+        particles.push({
+          x: canvas.width / 2,
+          y: canvas.height / 2,
+          r: Math.random() * 6 + 4,
+          dx: (Math.random() - 0.5) * 16,
+          dy: (Math.random() - 0.5) * 16 - 3,
+          color: colors[Math.floor(Math.random() * colors.length)],
+          tilt: Math.random() * 10,
+          tiltAngle: 0,
+          tiltAngleInc: (Math.random() * 0.08) + 0.04
+        });
+      }
+
+      let ticks = 0;
+      function render() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ticks++;
+
+        particles.forEach(p => {
+          p.x += p.dx;
+          p.y += p.dy;
+          p.dy += 0.25;
+          p.dx *= 0.98;
+          p.tiltAngle += p.tiltAngleInc;
+          p.tilt = Math.sin(p.tiltAngle) * 12;
+
+          ctx.beginPath();
+          ctx.lineWidth = p.r;
+          ctx.strokeStyle = p.color;
+          ctx.moveTo(p.x + p.tilt + p.r / 2, p.y);
+          ctx.lineTo(p.x + p.tilt, p.y + p.tilt + p.r / 2);
+          ctx.stroke();
+        });
+
+        if (ticks < 120) {
+          requestAnimationFrame(render);
+        } else {
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+        }
+      }
+      render();
+    }
+
+    /* Init */
+    window.addEventListener('DOMContentLoaded', () => {
+      syncFromCloud();
+      // Auto refresh from cloud every 5 seconds
+      setInterval(syncFromCloud, 5000);
+    });
+  </script>
+</body>
+</html>
